@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var unique = require("array-unique").immutable;
 
 var Category = require('../models/category_model').Category
 
@@ -64,20 +65,84 @@ router.post('/addMeal/:id', (req, res) => {
   })
 })
 
+function catID(id, res) {
+  Category.findById(id, ['meals'], (err, data) => {
+    if (err) {
+
+    } else {
+      res(data.meals)
+    }
+  })
+}
+function allMeals(res) {
+  Category.find({}, ['meals'], (err, data) => {
+    if (err) {
+
+    } else {
+      var t = []
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        t = t.concat(element.meals)
+      }
+      res(t)
+    }
+  })
+}
+function locID(rs, id, res) {
+  var t = []
+  for (let index = 0; index < rs.length; index++) {
+    const element = rs[index];
+    if (element.locationID == id) {
+      t.push(element)
+    }    
+  }
+  res(t)
+}
+function textKey(rs, key, res) {
+  var r = []
+  for (let index = 0; index < rs.length; index++) {
+    const element = rs[index];
+    if (element.nameAR.includes(key) || element.nameEN.includes(key)) {
+      r.push(element)
+    }
+  }
+  res(unique(r))
+}
 router.post('/findMeal', (req, res) => {
-  // Category.find({ _id: req.body.categoryID }, ['meals'], (err, data) => {
-  //   if (err) {
-  //     res.send(err)
-  //   } else {
-  //     var rs = {}
-  //     data.meals.forEach(element => {
-  //       if (req.body.locationID != "" && element.locationID == req.body.locationID) {
-  //         rs = element
-  //       }
-  //     });
-  //     res.send(rs)
-    // }
-  // })
+  var rs = []
+  if (req.body.categoryID != "") {
+    catID(req.body.categoryID, (rs1) => {
+      rs = rs.concat(rs1)
+      if (req.body.locationID != "") {
+        locID(rs, req.body.locationID, (rs2) => {
+          rs = rs2
+          textKey(rs, req.body.key, (rs3) => {
+            res.send(unique(rs3))
+          })
+        })
+      } else {
+        textKey(rs, req.body.key, (rs3) => {
+          res.send(unique(rs3))
+        })
+      }
+    })
+  } else {
+    allMeals(rs1 => {
+      rs = rs1
+      if (req.body.locationID != "") {
+        locID(rs, req.body.locationID, (rs2) => {
+          rs = rs2
+          textKey(rs, req.body.key, (rs3) => {
+            res.send(unique(rs3))
+          })
+        })
+      } else {
+        textKey(rs, req.body.key, (rs3) => {
+          res.send(unique(rs3))
+        })
+      }
+    })
+  }
 })
 
 module.exports = router;
