@@ -2,7 +2,8 @@ var mongoose = require('mongoose')
 var Meal = require('./meal_model').Schema
 
 const category = mongoose.Schema({
-    name: String,
+    nameAR: String,
+    nameEN: String,
     image: String,
     meals: [Meal]
 })

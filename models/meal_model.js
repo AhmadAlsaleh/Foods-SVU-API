@@ -1,11 +1,12 @@
 var mongoose = require('mongoose')
 
 const meal = mongoose.Schema({
-    name: String,
+    nameAR: String,
+    nameEN: String,
     image: String,
     locationID: String,
-    categoryID: String,
-    description: String,
+    descriptionAR: String,
+    descriptionEN: String,
     items: [String]
 })
 

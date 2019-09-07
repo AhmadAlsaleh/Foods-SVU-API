@@ -1,10 +1,12 @@
 var mongoose = require('mongoose')
 
 const location = mongoose.Schema({
-    name: String,
-    lat: Number,
-    lng: Number,
-    subLocations: [location]
+    nameAR: String,
+    nameEN: String,
+    subLocations: [{
+        nameAR: String,
+        nameEN: String
+    }]
 })
 
 module.exports = {
