@@ -156,12 +156,16 @@ router.post('/findMeal', (req, res) => {
         locID(rs, req.body.locationID, (rs2) => {
           rs = rs2
           textKey(rs, req.body.key, (rs3) => {
-            res.send(unique(rs3))
+            res.send({
+              "res": unique(rs3)
+            })
           })
         })
       } else {
         textKey(rs, req.body.key, (rs3) => {
-          res.send(unique(rs3))
+          res.send({
+            "res": unique(rs3)
+          })
         })
       }
     })
@@ -172,12 +176,16 @@ router.post('/findMeal', (req, res) => {
         locID(rs, req.body.locationID, (rs2) => {
           rs = rs2
           textKey(rs, req.body.key, (rs3) => {
-            res.send(unique(rs3))
+            res.send({
+              "res": unique(rs3)
+            })
           })
         })
       } else {
         textKey(rs, req.body.key, (rs3) => {
-          res.send(unique(rs3))
+          res.send({
+            "res": unique(rs3)
+          })
         })
       }
     })
