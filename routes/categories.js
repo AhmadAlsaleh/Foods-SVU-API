@@ -1,11 +1,50 @@
 var express = require('express');
 var router = express.Router();
 var unique = require("array-unique").immutable;
-
 var Category = require('../models/category_model').Category
 
 router.get('/', function(req, res, next) {
   Category.find({}, ['nameAR', 'nameEN', 'image'], (err, data) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.send(data)
+    }
+  })
+})
+
+router.get('/main', (req, res) => {
+  Category.find({ 'meals.onMain': true }, (err, data) => {
+    if (err) {
+      res.send(err)
+    } else {
+      var rs = []
+      for (let i = 0; i < data.length; i++) {
+        const category = data[i];
+        for (let j = 0; j < category.meals.length; j++) {
+          const meal = category.meals[j];
+          if (meal.onMain == true) {
+            rs.push(meal)
+          }
+        }
+      }
+      res.send(rs)
+    }
+  })
+})
+
+router.get('/main/:id', (req, res) => {
+  Category.update({ 'meals._id': req.params.id }, { $set: { 'meals.$.onMain': true } }, (err, data) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.send(data)
+    }
+  })
+})
+
+router.delete('/main/:id', (req, res) => {
+  Category.update({ 'meals._id': req.params.id }, { $set: { 'meals.$.onMain': false } }, (err, data) => {
     if (err) {
       res.send(err)
     } else {

@@ -7,7 +7,8 @@ const meal = mongoose.Schema({
     locationID: String,
     descriptionAR: String,
     descriptionEN: String,
-    items: [String]
+    favorites: [String],
+    onMain: { type: Boolean, default: false }
 })
 
 module.exports = {
