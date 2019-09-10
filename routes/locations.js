@@ -24,6 +24,23 @@ router.post('/Location', (req, res) => {
   })
 })
 
+router.get('/:id', (req, res) => {
+  Location.findOne({ 'subLocations._id': req.params.id }, (err, data) => {
+    if (err) {
+      res.send(err)
+    } else {
+      var rs = {}
+      data.subLocations.forEach(element => {
+        if (element._id = req.params.id) {
+          rs.nameAR = data.nameAR + ", " + element.nameAR
+          rs.nameEN = data.nameEN + ", " + element.nameEN
+        }
+      });
+      res.send(rs)
+    }
+  })
+})
+
 router.post('/newMainLocation', (req, res) => {
   new Location(req.body)
   .save()
@@ -41,23 +58,6 @@ router.post('/newSubLocation/:id', (req, res) => {
       res.send(err)
     } else {
       res.send(done)
-    }
-  })
-})
-
-router.get('/getLocation/:id', (req, res) => {
-  Location.findOne({ 'subLocations._id': req.params.id }, (err, data) => {
-    if (err) {
-      res.send(err)
-    } else {
-      var rs = {}
-      data.subLocations.forEach(element => {
-        if (element._id = req.params.id) {
-          rs.nameAR = data.nameAR + ", " + element.nameAR
-          rs.nameEN = data.nameEN + ", " + element.nameEN
-        }
-      });
-      res.send(rs)
     }
   })
 })
