@@ -104,6 +104,16 @@ router.post('/addMeal/:id', (req, res) => {
   })
 })
 
+router.delete('/deleteMeal/:id', (req, res) => {
+  Category.update({ 'meals._id': req.params.id }, { $pull: { meals: { _id: req.params.id } } }, (err, data) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.send(data)
+    }
+  })
+})
+
 function catID(id, res) {
   Category.findById(id, ['meals'], (err, data) => {
     if (err) {
