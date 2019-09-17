@@ -7,6 +7,7 @@ const meal = mongoose.Schema({
     locationID: String,
     descriptionAR: String,
     descriptionEN: String,
+    content: String,
     favorites: [String],
     onMain: { type: Boolean, default: false }
 })
